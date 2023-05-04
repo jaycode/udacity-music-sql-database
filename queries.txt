@@ -1,0 +1,36 @@
+-- Query 1: Tracks sold in countries
+
+SELECT BillingCountry,
+       SUM(Quantity) AS NumTracks
+FROM Invoice i
+LEFT JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+GROUP BY BillingCountry
+ORDER BY NumTracks DESC;
+
+-- Query 2: Genres popularity
+
+SELECT g.Name AS Genre,
+       SUM(il.Quantity) AS NumTracks
+FROM InvoiceLine il
+JOIN Track t ON t.TrackId = il.TrackId
+JOIN Genre g ON t.GenreId = g.GenreId
+GROUP BY g.GenreId
+ORDER BY NumTracks DESC;
+
+-- Query 3: Employees performance
+
+SELECT (e.FirstName || ' ' || e.LastName) AS FullName,
+       COUNT(*) AS NumCustomersServed
+FROM Employee e
+LEFT JOIN Customer c ON e.EmployeeId = c.SupportRepId
+GROUP BY e.EmployeeId
+ORDER BY NumCustomersServed DESC;
+
+-- Query 4: Revenues by customers
+
+SELECT (c.FirstName || ' ' || c.LastName) AS FullName,
+       SUM(i.Total) AS Revenue
+FROM Customer c
+LEFT JOIN Invoice i ON c.CustomerId = i.CustomerId
+GROUP BY c.CustomerId
+ORDER BY Revenue DESC;
